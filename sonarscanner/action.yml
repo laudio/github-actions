@@ -1,0 +1,31 @@
+name: 'SonarScan'
+description: 'Runs sonar-scanner command with the sonar scanner cli 4.6.2. '
+author: 'Prayatna Koirala'
+inputs:
+  SONAR_HOST_URL:
+    description: 'Your sonarqube server host URL'
+    required: true
+    default: ''
+  SONAR_TOKEN:
+    description: 'Your Sonar Token'
+    required: true
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        sudo wget  https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+        sudo apt-get install unzip -y
+        sudo unzip sonar-scanner-cli-4.6.2.2472-linux.zip 
+        sudo mv sonar-scanner-4.6.2.2472-linux/ /sonar-scanner
+        sudo rm sonar-scanner-cli-4.6.2.2472-linux.zip 
+        sudo chmod +x /sonar-scanner/bin/sonar-scanner
+      shell: bash
+    - run: |
+        echo "${GITHUB_REF#refs/heads/}" | sed -r 's/[/]+/./g' > GIT_BRANCH_FORMATTED
+        /sonar-scanner/bin/sonar-scanner \
+        -Dsonar.projectKey=${GITHUB_REPOSITORY#*/}_$(cat GIT_BRANCH_FORMATTED) \
+        -Dsonar.sources=. \
+        -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }} \
+        -Dsonar.login=${{ inputs.SONAR_TOKEN }}
+      shell: bash
