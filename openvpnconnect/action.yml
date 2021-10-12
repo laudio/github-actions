@@ -18,7 +18,10 @@ runs:
   using: 'composite'
   steps:
     - run: |
+        sudo apt-get install openvpn -y
+      shell: bash
+    - run: |
         echo -e "${{ inputs.VPN_USER }}\n${{ inputs.VPN_PASS }}" > ~/.vpncreds
-        sudo openvpn --config ${{ inputs.VPN_CONFIG }} --auth-user-pass ~/.vpncreds --daemon
+        sudo openvpn --config ${{ inputs.VPN_CONFIG }} --auth-user-pass ~/.vpncreds
         sleep 10s
       shell: bash
