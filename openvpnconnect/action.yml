@@ -11,7 +11,7 @@ inputs:
     required: true
     default: ''
   VPN_CONFIG:
-  description: 'Your openvpn configuration file'
+    description: 'Your openvpn configuration file'
     required: true
     default: ''
 runs:
