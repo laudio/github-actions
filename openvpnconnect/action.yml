@@ -18,7 +18,7 @@ runs:
   using: 'composite'
   steps:
     - run: |
-        echo -e "${{ secrets.VPN_USER }}\n${{ secrets.VPN_PASS }}" > ~/.vpncreds
-        sudo openvpn --config VPN_CONFIG --auth-user-pass ~/.vpncreds --daemon
+        echo -e "${{ inputs.VPN_USER }}\n${{ inputs.VPN_PASS }}" > ~/.vpncreds
+        sudo openvpn --config ${{ inputs.VPN_CONFIG }} --auth-user-pass ~/.vpncreds --daemon
         sleep 10s
       shell: bash
