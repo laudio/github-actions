@@ -2,13 +2,17 @@ name: 'SonarScan'
 description: 'Runs sonar-scanner command with the sonar scanner cli 4.6.2. '
 author: 'Prayatna Koirala'
 inputs:
-  SONAR_HOST_URL:
+  sonar_host_url:
     description: 'Your sonarqube server host URL'
     required: true
     default: ''
-  SONAR_TOKEN:
+  sonar_token:
     description: 'Your Sonar Token'
     required: true
+    default: ''
+  service_name:
+    description: 'An additional service name if its a monorepo'
+    required: false
     default: ''
 runs:
   using: 'composite'
@@ -24,8 +28,8 @@ runs:
     - run: |
         echo "${GITHUB_REF#refs/heads/}" | sed -r 's/[/]+/./g' > GIT_BRANCH_FORMATTED
         /sonar-scanner/bin/sonar-scanner \
-        -Dsonar.projectKey=${GITHUB_REPOSITORY#*/}_$(cat GIT_BRANCH_FORMATTED) \
+        -Dsonar.projectKey=${GITHUB_REPOSITORY#*/}__${{ inputs.service_name }}_$(cat GIT_BRANCH_FORMATTED) \
         -Dsonar.sources=. \
-        -Dsonar.host.url=${{ inputs.SONAR_HOST_URL }} \
-        -Dsonar.login=${{ inputs.SONAR_TOKEN }}
+        -Dsonar.host.url=${{ inputs.sonar_host_url }} \
+        -Dsonar.login=${{ inputs.sonar_token }}
       shell: bash
