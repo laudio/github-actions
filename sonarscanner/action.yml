@@ -1,15 +1,17 @@
 name: 'SonarScan'
 description: 'Runs sonar-scanner command with the sonar scanner cli 4.6.2. '
-author: 'Prayatna Koirala'
+author: 'Laudio'
 inputs:
+  source_directory:
+    description: 'The source directory to be scanned'
+    required: false
+    default: '.'
   sonar_host_url:
     description: 'Your sonarqube server host URL'
     required: true
-    default: ''
   sonar_token:
     description: 'Your Sonar Token'
     required: true
-    default: ''
   service_name:
     description: 'An additional service name if its a monorepo'
     required: false
@@ -26,10 +28,11 @@ runs:
         sudo chmod +x /sonar-scanner/bin/sonar-scanner
       shell: bash
     - run: |
-        echo "${GITHUB_REF#refs/heads/}" | sed -r 's/[/]+/./g' > GIT_BRANCH_FORMATTED
+        echo "${GITHUB_REF#refs/heads/}" | sed -r 's/[/]+/-/g' > GIT_BRANCH_FORMATTED
+        echo "${{ inputs.service_name != '' && '_'||''}}${{ inputs.service_name!='' && inputs.service_name||'_'}}${{ inputs.service_name != '' && '_'||''}}" > GIT_SERVICE_NAME
         /sonar-scanner/bin/sonar-scanner \
-        -Dsonar.projectKey=${GITHUB_REPOSITORY#*/}__${{ inputs.service_name }}_$(cat GIT_BRANCH_FORMATTED) \
-        -Dsonar.sources=. \
+        -Dsonar.projectKey=${GITHUB_REPOSITORY#*/}$(cat GIT_SERVICE_NAME)$(cat GIT_BRANCH_FORMATTED) \
+        -Dsonar.sources=${{ inputs.source_directory }} \
         -Dsonar.host.url=${{ inputs.sonar_host_url }} \
         -Dsonar.login=${{ inputs.sonar_token }}
       shell: bash
