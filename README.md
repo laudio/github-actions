@@ -1,1 +1,1 @@
-# Github actions for Laudio
+# GitHub Actions for Laudio
