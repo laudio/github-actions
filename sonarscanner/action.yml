@@ -33,7 +33,7 @@ runs:
         GIT_SERVICE_NAME=$(echo "${SERVICE_NAME:+_$SERVICE_NAME}")
         /sonar-scanner/bin/sonar-scanner \
         -Dsonar.projectKey=$(echo "${GITHUB_REPOSITORY#*/}${GIT_SERVICE_NAME}_${GIT_BRANCH_FORMATTED}") \
-        -Dsonar.sources=${{ inputs.source_dir }} \
+        -Dsonar.sources=${{ inputs.source_directory }} \
         -Dsonar.host.url=${{ inputs.sonar_host_url }} \
         -Dsonar.login=${{ inputs.sonar_token }}
       shell: bash
