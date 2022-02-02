@@ -1,25 +1,43 @@
 name: 'Status Checker'
 description: 'Run lint, prettier and build in repository.'
 author: 'Sagar Chamling'
+
 inputs:
   path:
     description: 'The source directory path where status should be checked.'
     required: false
     default: '.'
+  skip-build:
+    description: 'Skips build command.'
+    required: false
+    default: "false"
+
 runs:
   using: 'composite'
   steps:
-    - run: |
+    - name: Install Dependencies
+      run: |
+        cd ${{ inputs.path }}
+        yarn
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.LAUDIO_GITHUB_TOKEN }}
+      shell: bash
+
+    - name: Run lint
+      run: |
         cd ${{ inputs.path }}
         yarn lint
       shell: bash
-    
-    - run: |
+
+    - name: Run Prettier Check
+      run: |
         cd ${{ inputs.path }}
         yarn prettier:check
       shell: bash
-    
-    - run: |
+
+    - name: Run build
+      if: ${{ contains(inputs.skip-build, 'true') }}
+      run: |
         cd ${{ inputs.path }}
         yarn build
       shell: bash

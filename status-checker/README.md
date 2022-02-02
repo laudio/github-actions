@@ -7,3 +7,7 @@ Setup vpn with openvpn
 ###### path
 
 The source directory path where status should be checked.
+
+###### skip-build
+
+Skips build command.
