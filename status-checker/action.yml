@@ -1,0 +1,25 @@
+name: 'Status Checker'
+description: 'Run lint, prettier and build in repository.'
+author: 'Sagar Chamling'
+inputs:
+  path:
+    description: 'The source directory path where status should be checked.'
+    required: false
+    default: '.'
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        cd ${{ inputs.path }}
+        yarn lint
+      shell: bash
+    
+    - run: |
+        cd ${{ inputs.path }}
+        yarn prettier:check
+      shell: bash
+    
+    - run: |
+        cd ${{ inputs.path }}
+        yarn build
+      shell: bash
