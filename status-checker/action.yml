@@ -11,6 +11,10 @@ inputs:
     description: 'Skips build command.'
     required: false
     default: "false"
+  token:
+    description: 'GITHUB_TOKEN or a repo scoped PATH'
+    required: true
+    default: ${{ github.token }}
 
 runs:
   using: 'composite'
@@ -20,7 +24,7 @@ runs:
         cd ${{ inputs.path }}
         yarn
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.LAUDIO_GITHUB_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.token }}
       shell: bash
 
     - name: Run lint
