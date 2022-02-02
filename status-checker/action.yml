@@ -10,7 +10,7 @@ inputs:
   skip-build:
     description: 'Skips build command.'
     required: false
-    default: "false"
+    default: "true"
   token:
     description: 'GITHUB_TOKEN or a repo scoped PATH'
     required: true
