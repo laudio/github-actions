@@ -61,8 +61,8 @@ runs:
       shell: bash
 
     - name: Running security scans (Sonarqube)
-      if: ${{ contains(inputs.skip-build, 'true') }}
-      uses: laudio/github-actions/sonarscanner@v1.0.11
+      if: ${{ contains(inputs.skip-security-scanning, 'true') }}
+      uses: laudio/github-actions/sonarscanner@v1.0.17
       with:
         sonar_token: ${{ inputs.sonar_token }}
         sonar_host_url: ${{ inputs.sonar_host_url }}

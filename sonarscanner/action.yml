@@ -20,11 +20,12 @@ runs:
   using: 'composite'
   steps:
     - run: |
+        sudo rm -rf sonar-scanner-4.6.2.2472-linux/ /sonar-scanner
         sudo wget  https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
         sudo apt-get install unzip -y
-        sudo unzip sonar-scanner-cli-4.6.2.2472-linux.zip 
+        sudo unzip sonar-scanner-cli-4.6.2.2472-linux.zip
         sudo mv sonar-scanner-4.6.2.2472-linux/ /sonar-scanner
-        sudo rm sonar-scanner-cli-4.6.2.2472-linux.zip 
+        sudo rm sonar-scanner-cli-4.6.2.2472-linux.zip
         sudo chmod +x /sonar-scanner/bin/sonar-scanner
       shell: bash
     - run: |
