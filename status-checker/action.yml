@@ -7,14 +7,28 @@ inputs:
     description: 'The source directory path where status should be checked.'
     required: false
     default: '.'
+  service_name:
+    description: 'An additional service name if its a monorepo'
+    required: false
+    default: ''
   skip-build:
     description: 'Skips build command.'
+    required: false
+    default: "true"
+  skip-security-scanning:
+    description: 'Skips security scanning.'
     required: false
     default: "true"
   token:
     description: 'GITHUB_TOKEN or a repo scoped PATH'
     required: true
     default: ${{ github.token }}
+  sonar_host_url:
+    description: 'Your sonarqube server host URL'
+    required: true
+  sonar_token:
+    description: 'Your Sonar Token'
+    required: true
 
 runs:
   using: 'composite'
@@ -45,3 +59,12 @@ runs:
         cd ${{ inputs.path }}
         yarn build
       shell: bash
+
+    - name: Running security scans (Sonarqube)
+      if: ${{ contains(inputs.skip-build, 'true') }}
+      uses: laudio/github-actions/sonarscanner@v1.0.11
+      with:
+        sonar_token: ${{ inputs.sonar_token }}
+        sonar_host_url: ${{ inputs.sonar_host_url }}
+        service_name: ${{ inputs.service_name }}
+        source_directory: ${{ inputs.path }}
