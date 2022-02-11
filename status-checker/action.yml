@@ -1,5 +1,5 @@
 name: 'Status Checker'
-description: 'Run lint, prettier and build in repository.'
+description: 'Run preliminary status checks in a  JavaScript/TypeScript repository'
 author: 'Sagar Chamling'
 
 inputs:
@@ -41,26 +41,26 @@ runs:
         NODE_AUTH_TOKEN: ${{ inputs.token }}
       shell: bash
 
-    - name: Run lint
+    - name: Lint
       run: |
         cd ${{ inputs.path }}
         yarn lint
       shell: bash
 
-    - name: Run Prettier Check
+    - name: Code Format Check
       run: |
         cd ${{ inputs.path }}
         yarn prettier:check
       shell: bash
 
-    - name: Run build
+    - name: Build
       if: ${{ contains(inputs.skip-build, 'true') }}
       run: |
         cd ${{ inputs.path }}
         yarn build
       shell: bash
 
-    - name: Running security scans (Sonarqube)
+    - name: Security Scan (Sonarqube)
       if: ${{ contains(inputs.skip-security-scanning, 'true') }}
       uses: laudio/github-actions/sonarscanner@v1.0.17
       with:
