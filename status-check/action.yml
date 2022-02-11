@@ -1,4 +1,4 @@
-name: 'Status Checker'
+name: 'Status Check'
 description: 'Run preliminary status checks in a  JavaScript/TypeScript repository'
 author: 'Sagar Chamling'
 
@@ -54,14 +54,14 @@ runs:
       shell: bash
 
     - name: Build
-      if: ${{ contains(inputs.skip-build, 'true') }}
+      if: ${{ !contains(inputs.skip-build, 'false') }}
       run: |
         cd ${{ inputs.path }}
         yarn build
       shell: bash
 
     - name: Security Scan (Sonarqube)
-      if: ${{ contains(inputs.skip-security-scanning, 'true') }}
+      if: ${{ !contains(inputs.skip-security-scanning, 'false') }}
       uses: laudio/github-actions/sonarscanner@v1.0.17
       with:
         sonar_token: ${{ inputs.sonar_token }}
