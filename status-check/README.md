@@ -52,7 +52,7 @@ This is an optional input for service name in monorepos
 
   - name: Status Check
     if: contains(fromJson(needs.detect-changed-files.outputs.services), 'files')
-    uses: laudio/github-actions/status-checker@v1.0.18
+    uses: laudio/github-actions/status-check@v1.0.18
     with:
       path: "services/export"
       token: ${{ secrets.LAUDIO_GITHUB_TOKEN }}
