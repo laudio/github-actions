@@ -1,0 +1,81 @@
+name: 'Status Check'
+description: 'Run preliminary status checks in a  JavaScript/TypeScript repository'
+author: 'Sagar Chamling'
+
+inputs:
+  path:
+    description: 'The source directory path where status should be checked.'
+    required: false
+    default: '.'
+  service_name:
+    description: 'An additional service name if its a monorepo'
+    required: false
+    default: ''
+  skip-build:
+    description: 'Skips build command.'
+    required: false
+    default: "true"
+  skip-security-scanning:
+    description: 'Skips security scanning.'
+    required: false
+    default: "true"
+  token:
+    description: 'GITHUB_TOKEN or a repo scoped PATH'
+    required: true
+    default: ${{ github.token }}
+  sonar_host_url:
+    description: 'Your sonarqube server host URL'
+    required: true
+  sonar_token:
+    description: 'Your Sonar Token'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install Dependencies
+      run: |
+        cd ${{ inputs.path }}
+        yarn
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.token }}
+      shell: bash
+
+    - name: Yarn Lock Changes
+      uses: Simek/yarn-lock-changes@main
+      with:
+        # Optional inputs, can be deleted safely if you are happy with default values
+        collapsibleThreshold: 25
+        failOnDowngrade: false
+        path: "services/${{ inputs.path }}/yarn.lock"
+        updateComment: true
+        # Has to be GITHUB_TOKEN to enable update comment feature.
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Lint
+      run: |
+        cd ${{ inputs.path }}
+        yarn lint
+      shell: bash
+
+    - name: Code Format Check
+      run: |
+        cd ${{ inputs.path }}
+        yarn prettier:check
+      shell: bash
+
+    - name: Build
+      if: ${{ !contains(inputs.skip-build, 'false') }}
+      run: |
+        cd ${{ inputs.path }}
+        yarn build
+      shell: bash
+
+    - name: Security Scan (Sonarqube)
+      if: ${{ !contains(inputs.skip-security-scanning, 'false') }}
+      uses: laudio/github-actions/sonarscanner@v1.0.17
+      with:
+        sonar_token: ${{ inputs.sonar_token }}
+        sonar_host_url: ${{ inputs.sonar_host_url }}
+        service_name: ${{ inputs.service_name }}
+        source_directory: ${{ inputs.path }}
