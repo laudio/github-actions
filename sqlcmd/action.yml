@@ -32,5 +32,5 @@ runs:
       shell: bash
     - run: |
         echo "Running the query file ${{ inputs.query_file }}"
-        sqlcmd -S ${{ inputs.db_host }},${{ inputs.db_port }} -U ${{ db_user }} -P ${{ inputs.db_password }} -b -i ${{ inputs.query_file }}
+        sqlcmd -S ${{ inputs.db_host }},${{ inputs.db_port }} -U ${{ inputs.db_user }} -P ${{ inputs.db_password }} -b -i ${{ inputs.query_file }}
       shell: bash
