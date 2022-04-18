@@ -32,5 +32,7 @@ runs:
       shell: bash
     - run: |
         echo "Running the query file ${{ inputs.query_file }}"
-        sqlcmd -S ${{ inputs.db_host }},${{ inputs.db_port }} -U ${{ inputs.db_user }} -P ${{ inputs.db_password }} -b -i ${{ inputs.query_file }}
+        GIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
+        sqlcmd -S ${{ inputs.db_host }},${{ inputs.db_port }} -U ${{ inputs.db_user }} -P ${{ inputs.db_password }} -b -i ${{ inputs.query_file }} -o "${GIT_HASH}.txt"
+        cat "${GIT_HASH}.txt"
       shell: bash
