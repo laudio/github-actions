@@ -10,7 +10,7 @@ inputs:
     description: 'Your openvpn password'
     required: true
     default: ''
-  VPN_CONFIG:
+  VPN_CONFIG_FILE_PATH:
     description: 'Your openvpn configuration file'
     required: true
     default: ''
@@ -22,7 +22,6 @@ runs:
       shell: bash
     - run: |
         echo -e "${{ inputs.VPN_USER }}\n${{ inputs.VPN_PASS }}" > ~/.vpncreds
-        echo """${{ inputs.VPN_CONFIG }}""" > ./config.ovpn
-        sudo openvpn --config config.ovpn --auth-user-pass ~/.vpncreds --daemon
+        sudo openvpn --config "${{inputs.VPN_CONFIG_FILE_PATH}}" --auth-user-pass ~/.vpncreds --daemon
         sleep 10s
       shell: bash
