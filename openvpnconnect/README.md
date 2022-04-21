@@ -12,6 +12,8 @@ Your openvpn username
 
 Your openvpn password
 
-###### VPN_CONFIG
+###### VPN_CONFIG_FILE_PATH
 
-The openvpn config file
+The openvpn config file path. defaults to './config.ovpn' 
+
+Theres an additional 10seconds sleep time when this action finishes.
