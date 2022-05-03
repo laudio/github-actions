@@ -1,0 +1,37 @@
+name: 'Sqlcmd Query Execute'
+description: 'Executes query files with sqlcmd '
+author: 'Laudio'
+inputs:
+  query_file:
+    description: 'The query file to be executed'
+    required: true
+  db_host:
+    description: 'Your database host'
+    required: true
+  db_user:
+    description: 'Your database user'
+    required: true
+  db_password:
+    description: 'Your db password'
+    required: true
+  db_port:
+    description: 'Database port'
+    required: false
+    default: 1433
+runs:
+  using: 'composite'
+  steps:
+    - run: |
+        echo "Installing sqlcmd"
+        curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+        curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list | sudo tee /etc/apt/sources.list.d/msprod.list
+        sudo apt-get update 
+        sudo apt-get install mssql-tools unixodbc-dev
+        export PATH=$PATH:/opt/mssql-tools/bin
+        echo "Sqlcmd installation complete"
+      shell: bash
+    - run: |
+        echo "Running the query file ${{ inputs.query_file }}"
+        GIT_HASH="$GITHUB_SHA"
+        sqlcmd -S ${{ inputs.db_host }},${{ inputs.db_port }} -U ${{ inputs.db_user }} -P ${{ inputs.db_password }} -b -i ${{ inputs.query_file }} -o "${GIT_HASH}.txt"
+      shell: bash
