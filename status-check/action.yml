@@ -50,7 +50,7 @@ runs:
         path: "services/${{ inputs.path }}/yarn.lock"
         updateComment: true
         # Has to be GITHUB_TOKEN to enable update comment feature.
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ inputs.token }}
 
     - name: Lint
       run: |
