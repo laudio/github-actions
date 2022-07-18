@@ -1,37 +1,37 @@
-name: 'Status Check'
-description: 'Run preliminary status checks in a  JavaScript/TypeScript repository'
-author: 'Sagar Chamling'
+name: "Status Check"
+description: "Run preliminary status checks in a  JavaScript/TypeScript repository"
+author: "Sagar Chamling"
 
 inputs:
   path:
-    description: 'The source directory path where status should be checked.'
+    description: "The source directory path where status should be checked."
     required: false
-    default: '.'
+    default: "."
   service_name:
-    description: 'An additional service name if its a monorepo'
+    description: "An additional service name if its a monorepo"
     required: false
-    default: ''
+    default: ""
   skip-build:
-    description: 'Skips build command.'
+    description: "Skips build command."
     required: false
     default: "true"
   skip-security-scanning:
-    description: 'Skips security scanning.'
+    description: "Skips security scanning."
     required: false
-    default: "true"
+    default: "false"
   token:
-    description: 'GITHUB_TOKEN or a repo scoped PATH'
+    description: "GITHUB_TOKEN or a repo scoped PATH"
     required: true
     default: ${{ github.token }}
   sonar_host_url:
-    description: 'Your sonarqube server host URL'
+    description: "Your sonarqube server host URL"
     required: true
   sonar_token:
-    description: 'Your Sonar Token'
+    description: "Your Sonar Token"
     required: true
 
 runs:
-  using: 'composite'
+  using: "composite"
   steps:
     - name: Install Dependencies
       run: |
@@ -72,7 +72,7 @@ runs:
       shell: bash
 
     - name: Security Scan (Sonarqube)
-      if: ${{ !contains(inputs.skip-security-scanning, 'false') }}
+      if: ${{ !contains(inputs.skip-security-scanning, 'true') }}
       uses: laudio/github-actions/sonarscanner@v1.0.17
       with:
         sonar_token: ${{ inputs.sonar_token }}
